@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  ContainerService43:
+    Type: AWS::Lightsail::Container
+    Properties: 
+      ContainerServiceDeployment: 
+        Containers:
+          - ContainerName: proxy
+            Image: carlpaton/containerservice43.proxy-image:latest
+            Ports: 
+              - Port: 80
+                Protocol: HTTP
+          - ContainerName: app
+            Image: carlpaton/containerservice43.app-image:latest
+            Ports: 
+              - Port: 5000
+                Protocol: HTTP
+        PublicEndpoint: 
+          ContainerName: proxy
+          ContainerPort: 80
+          HealthCheckConfig: 
+            HealthyThreshold: 2
+            IntervalSeconds: 5
+            Path: /
+            SuccessCodes: 200-499
+            TimeoutSeconds: 2
+            UnhealthyThreshold: 2
+      IsDisabled: false
+      Power: micro
+      Scale: 1
+      ServiceName: containerservice43
